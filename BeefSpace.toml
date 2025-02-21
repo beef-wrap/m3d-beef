@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {m3d-beef = {Path = "."}, example = {Path = "example"}}
+
+[Workspace]
+StartupProject = "example"

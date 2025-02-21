@@ -1,0 +1,10 @@
+FileVersion = 1
+
+[Project]
+Name = "m3d-beef"
+TargetType = "BeefLib"
+StartupObject = "m3d_beef.Program"
+
+[Configs.Debug.Win64]
+CLibType = "DynamicDebug"
+LibPaths = ["$(ProjectDir)\\libs\\m3d-windows.lib"]
