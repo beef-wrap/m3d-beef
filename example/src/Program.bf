@@ -3,7 +3,8 @@ using System.Interop;
 using System.Diagnostics;
 using System.IO;
 using System.Collections;
-using static M3D_Beef.M3D;
+
+using static m3d.m3d;
 
 namespace example;
 

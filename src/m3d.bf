@@ -36,48 +36,52 @@
 using System;
 using System.Interop;
 
-namespace M3D_Beef;
+namespace m3d;
 
-public static class M3D
+public static class m3d
 {
-	#if !M3D_DOUBLE
-	typealias M3D_FLOAT = float;
-	#if !M3D_EPSILON
+#if !M3D_DOUBLE
+	public typealias M3D_FLOAT = float;
+
+#if !M3D_EPSILON
 	/* carefully choosen for IEEE 754 don't change */
-	const float M3D_EPSILON = ((M3D_FLOAT)1e-7);
-	#endif
-	#else
-	typealias M3D_FLOAT = double;
+	public const float M3D_EPSILON = ((M3D_FLOAT)1e-7);
+#endif
+
+#else
+	public typealias M3D_FLOAT = double;
+
 	#if !M3D_EPSILON
-	const double M3D_EPSILON = ((M3D_FLOAT)1e-14)
-	#endif
+	public const double M3D_EPSILON = ((M3D_FLOAT)1e-14)
 	#endif
 
-	#if !M3D_SMALLINDEX
+#endif
+
+#if !M3D_SMALLINDEX
 	typealias M3D_INDEX = c_uint;
 	typealias M3D_VOXEL = c_ushort;
-	const int M3D_UNDEF = 0xffffffff;
-	const int M3D_INDEXMAX = 0xfffffffe;
-	const int M3D_VOXUNDEF = 0xffff;
-	const int M3D_VOXCLEAR = 0xfffe;
-	#else
+	const c_int M3D_UNDEF = (.)0xffffffff;
+	const c_int M3D_INDEXMAX = (.)0xfffffffe;
+	const c_int M3D_VOXUNDEF = 0xffff;
+	const c_int M3D_VOXCLEAR = 0xfffe;
+#else
 	typealias M3D_INDEX = c_ushort;
 	typealias M3D_VOXEL = c_uchar;
-	const int M3D_UNDEF = 0xffff;
-	const int M3D_INDEXMAX = 0xfffe;
-	const int M3D_VOXUNDEF = 0xff;
-	const int M3D_VOXCLEAR = 0xfe;
-	#endif
+	const c_int M3D_UNDEF = 0xffff;
+	const c_int M3D_INDEXMAX = 0xfffe;
+	const c_int M3D_VOXUNDEF = 0xff;
+	const c_int M3D_VOXCLEAR = 0xfe;
+#endif
 
-	const int M3D_NOTDEFINED = 0xffffffff;
+	const c_int M3D_NOTDEFINED = (.)0xffffffff;
 
-	#if !M3D_NUMBONE
-	const int M3D_NUMBONE = 4;
-	#endif
+#if !M3D_NUMBONE
+	const c_int M3D_NUMBONE = 4;
+#endif
 
-	#if !M3D_BONEMAXLEVEL
-	const int M3D_BONEMAXLEVEL = 64;
-	#endif
+#if !M3D_BONEMAXLEVEL
+	const c_int M3D_BONEMAXLEVEL = 64;
+#endif
 
    /*** File format structures ***/
 
@@ -195,7 +199,7 @@ public static class M3D
 	}
 
 	 /* material property formats */
-	enum maerial_property_format
+	public enum maerial_property_format : c_int
 	{
 		m3dpf_color,
 		m3dpf_uint8,
@@ -203,7 +207,7 @@ public static class M3D
 		m3dpf_uint32,
 		m3dpf_float,
 		m3dpf_map
-	};
+	}
 
 	[CRepr]
 	public struct m3dpd_t
@@ -224,7 +228,7 @@ public static class M3D
 	 /* material property types */
 	 /* You shouldn't change the first 8 display and first 4 physical property. Assign the rest as you like. */
 	[AllowDuplicates]
-	enum material_property_type
+	public enum material_property_type : c_int
 	{
 		m3dp_Kd = 0, /* scalar display properties */
 		m3dp_Ka,
@@ -261,7 +265,7 @@ public static class M3D
 		m3dp_bump = m3dp_map_Km,
 		m3dp_map_il = m3dp_map_N,
 		m3dp_refl = m3dp_map_Pm
-	};
+	}
 
 	 /* material property */
 	[CRepr]
@@ -334,7 +338,7 @@ public static class M3D
 	}
 
 	 /* shape command types. must match the row in m3d_commandtypes */
-	enum shape_command_type
+	public enum shape_command_type : c_int
 	{
 		/* special commands */
 		m3dc_use = 0, /* use material */
@@ -380,10 +384,10 @@ public static class M3D
 		m3dc_torus,
 		m3dc_cone,
 		m3dc_cube
-	};
+	}
 
 	 /* shape command argument types */
-	enum shape_command_argument_type
+	public enum shape_command_argument_type : c_int
 	{
 		m3dcp_mi_t = 1, /* material index */
 		m3dcp_hi_t, /* shape index */
@@ -396,9 +400,9 @@ public static class M3D
 		m3dcp_i2_t, /* int16 scalar */
 		m3dcp_i4_t, /* int32 scalar */
 		m3dcp_va_t /* variadic arguments */
-	};
+	}
 
-	const int M3D_CMDMAXARG = 8; /* if you increase this, add more arguments to the macro below */
+	const c_int M3D_CMDMAXARG = 8; /* if you increase this, add more arguments to the macro below */
 
 	[CRepr]
 	public struct m3dcd_t
@@ -414,7 +418,7 @@ public static class M3D
 	 #endif
 		c_uchar p;
 		c_uchar[M3D_CMDMAXARG] a;
-	};
+	}
 
 	 /* shape command */
 	[CRepr]
@@ -422,7 +426,7 @@ public static class M3D
 	{
 		c_ushort type; /* shape type */
 		c_uint* arg; /* arguments array */
-	};
+	}
 
 
 	 /* shape entry */
@@ -453,7 +457,7 @@ public static class M3D
 		M3D_INDEX boneid; /* selects a node in bone hierarchy */
 		M3D_INDEX pos; /* vertex index new position */
 		M3D_INDEX ori; /* vertex index new orientation (quaternion) */
-	};
+	}
 
 	 /* animation frame entry */
 	[CRepr]
@@ -462,7 +466,7 @@ public static class M3D
 		c_uint msec; /* frame's position on the timeline, timestamp */
 		M3D_INDEX numtransform; /* number of transformations in this frame */
 		m3dtr_t* transform; /* transformations */
-	};
+	}
 
 	 /* model action entry */
 	[CRepr] public struct m3da_t
@@ -483,10 +487,10 @@ public static class M3D
 	}
 
 	 /*** in-memory model structure ***/
-	const int M3D_FLG_FREERAW    = (1 << 0);
-	const int M3D_FLG_FREESTR    = (1 << 1);
-	const int M3D_FLG_MTLLIB     = (1 << 2);
-	const int M3D_FLG_GENNORM    = (1 << 3);
+	const c_int M3D_FLG_FREERAW    = (1 << 0);
+	const c_int M3D_FLG_FREESTR    = (1 << 1);
+	const c_int M3D_FLG_MTLLIB     = (1 << 2);
+	const c_int M3D_FLG_GENNORM    = (1 << 3);
 
 	[CRepr]
 	public struct m3d_t
@@ -538,56 +542,56 @@ public static class M3D
 	}
 
 	 /*** export parameters ***/
-	const int M3D_EXP_INT8      =  0;
-	const int M3D_EXP_INT16     =  1;
-	const int M3D_EXP_FLOAT     =  2;
-	const int M3D_EXP_DOUBLE    =  3;
+	const c_int M3D_EXP_INT8      =  0;
+	const c_int M3D_EXP_INT16     =  1;
+	const c_int M3D_EXP_FLOAT     =  2;
+	const c_int M3D_EXP_DOUBLE    =  3;
 
-	const int M3D_EXP_NOCMAP     = (1 << 0);
-	const int M3D_EXP_NOMATERIAL = (1 << 1);
-	const int M3D_EXP_NOFACE     = (1 << 2);
-	const int M3D_EXP_NONORMAL   = (1 << 3);
-	const int M3D_EXP_NOTXTCRD   = (1 << 4);
-	const int M3D_EXP_FLIPTXTCRD = (1 << 5);
-	const int M3D_EXP_NORECALC   = (1 << 6);
-	const int M3D_EXP_IDOSUCK    = (1 << 7);
-	const int M3D_EXP_NOBONE     = (1 << 8);
-	const int M3D_EXP_NOACTION   = (1 << 9);
-	const int M3D_EXP_INLINE     = (1 << 10);
-	const int M3D_EXP_EXTRA      = (1 << 11);
-	const int M3D_EXP_NOZLIB     = (1 << 14);
-	const int M3D_EXP_ASCII      = (1 << 15);
-	const int M3D_EXP_NOVRTMAX   = (1 << 16);
+	const c_int M3D_EXP_NOCMAP     = (1 << 0);
+	const c_int M3D_EXP_NOMATERIAL = (1 << 1);
+	const c_int M3D_EXP_NOFACE     = (1 << 2);
+	const c_int M3D_EXP_NONORMAL   = (1 << 3);
+	const c_int M3D_EXP_NOTXTCRD   = (1 << 4);
+	const c_int M3D_EXP_FLIPTXTCRD = (1 << 5);
+	const c_int M3D_EXP_NORECALC   = (1 << 6);
+	const c_int M3D_EXP_IDOSUCK    = (1 << 7);
+	const c_int M3D_EXP_NOBONE     = (1 << 8);
+	const c_int M3D_EXP_NOACTION   = (1 << 9);
+	const c_int M3D_EXP_INLINE     = (1 << 10);
+	const c_int M3D_EXP_EXTRA      = (1 << 11);
+	const c_int M3D_EXP_NOZLIB     = (1 << 14);
+	const c_int M3D_EXP_ASCII      = (1 << 15);
+	const c_int M3D_EXP_NOVRTMAX   = (1 << 16);
 
 	 /*** error codes ***/
-	const int M3D_SUCCESS         =  0;
-	const int M3D_ERR_ALLOC       = -1;
-	const int M3D_ERR_BADFILE     = -2;
-	const int M3D_ERR_UNIMPL      = -65;
-	const int M3D_ERR_UNKPROP     = -66;
-	const int M3D_ERR_UNKMESH     = -67;
-	const int M3D_ERR_UNKIMG      = -68;
-	const int M3D_ERR_UNKFRAME    = -69;
-	const int M3D_ERR_UNKCMD      = -70;
-	const int M3D_ERR_UNKVOX      = -71;
-	const int M3D_ERR_TRUNC       = -72;
-	const int M3D_ERR_CMAP        = -73;
-	const int M3D_ERR_TMAP        = -74;
-	const int M3D_ERR_VRTS        = -75;
-	const int M3D_ERR_BONE        = -76;
-	const int M3D_ERR_MTRL        = -77;
-	const int M3D_ERR_SHPE        = -78;
-	const int M3D_ERR_VOXT        = -79;
+	const c_int M3D_SUCCESS         =  0;
+	const c_int M3D_ERR_ALLOC       = -1;
+	const c_int M3D_ERR_BADFILE     = -2;
+	const c_int M3D_ERR_UNIMPL      = -65;
+	const c_int M3D_ERR_UNKPROP     = -66;
+	const c_int M3D_ERR_UNKMESH     = -67;
+	const c_int M3D_ERR_UNKIMG      = -68;
+	const c_int M3D_ERR_UNKFRAME    = -69;
+	const c_int M3D_ERR_UNKCMD      = -70;
+	const c_int M3D_ERR_UNKVOX      = -71;
+	const c_int M3D_ERR_TRUNC       = -72;
+	const c_int M3D_ERR_CMAP        = -73;
+	const c_int M3D_ERR_TMAP        = -74;
+	const c_int M3D_ERR_VRTS        = -75;
+	const c_int M3D_ERR_BONE        = -76;
+	const c_int M3D_ERR_MTRL        = -77;
+	const c_int M3D_ERR_SHPE        = -78;
+	const c_int M3D_ERR_VOXT        = -79;
 
 	/* callbacks */
 	function c_uchar* m3dread_t(c_char* filename, c_uint* size); /* read file contents into buffer */
 	function void m3dfree_t(void* buffer); /* free file contents buffer */
-	function int m3dtxsc_t(c_char* name, void* script, c_uint len, m3dtx_t* output); /* interpret texture script */
-	function int m3dprsc_t(c_char* name, void* script, c_uint len, m3d_t* model); /* interpret surface script */
+	function c_int m3dtxsc_t(c_char* name, void* script, c_uint len, m3dtx_t* output); /* interpret texture script */
+	function c_int m3dprsc_t(c_char* name, void* script, c_uint len, m3d_t* model); /* interpret surface script */
 
 	[CLink] public static extern m3d_t* m3d_load(c_uchar* data, m3dread_t readfilecb, m3dfree_t freecb, m3d_t* mtllib);
 
-	[CLink] public static extern c_uchar* m3d_save(m3d_t* model, int quality, int flags, c_uint* size);
+	[CLink] public static extern c_uchar* m3d_save(m3d_t* model, c_int quality, c_int flags, c_uint* size);
 
 	[CLink] public static extern void m3d_free(m3d_t* model);
 
@@ -597,5 +601,5 @@ public static class M3D
 	[CLink] public static extern m3db_t* m3d_pose(m3d_t* model, M3D_INDEX actionid, c_uint msec);
 
 	 /* private prototypes used by both importer and exporter */
-	[CLink] public static extern c_char* _m3d_safestr(c_char* _in, int morelines);
+	[CLink] public static extern c_char* _m3d_safestr(c_char* _in, c_int morelines);
 }
